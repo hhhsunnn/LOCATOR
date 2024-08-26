@@ -1,0 +1,24 @@
+Package: LOCATOR
+Type: Package
+Title: LOCATOR: Perform local-ancestry-aware association tests for
+        local-ancestry-sensitive populations
+Version: 0.1.0
+Authors@R: c(person('Hanxiao','Sun',role=c('aut','cre'),email='Hanxiao.Sun@uth.tmc.edu'),
+             person('Han','Chen',role=c('aut','cre'),email='Han.Chen.2@uth.tmc.edu'))
+Author: Hanxiao Sun [aut, cre]
+    Han Chen [aut, cre]
+Maintainer: Han Chen <Han.Chen.2@uth.tmc.edu>
+Description: An R package that provides local ancestry related data manipulation tools.
+    Yield robust local-ancestry-effect-adjusted GWAS results and relevant plotting with computational efficiency.
+    Also can be adapted to adjust local effects different from the overall global effects for other data needs.
+Encoding: UTF-8
+Roxygen: list(markdown=TRUE)
+Depends: R (>= 4.2.0)
+Imports: data.table, dplyr (>= 1.1.4), tidyr, tibble, ggplot2,
+        scatterpie, MASS, Matrix, rje, rlang, magrittr
+Suggests: GMMAT, SeqArray, SeqVarTools
+RoxygenNote: 7.3.2
+License: GPL (>= 3)
+NeedsCompilation: no
+Packaged: 2024-08-26 07:01:40 UTC; hanxiaos
+Built: R 4.4.1; ; 2024-08-26 07:01:48 UTC; unix

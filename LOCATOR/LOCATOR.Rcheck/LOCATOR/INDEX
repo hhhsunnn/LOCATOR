@@ -1,0 +1,10 @@
+get.LACs                Generate Local Ancestry Coordinates (LACs)
+get.anchor              Get the population anchor matrix
+get.breakpoints         Identify local ancestry breakpoints and
+                        generate local-ancestry-based global ancestry
+                        proportions if applicable.
+get.la.aware.score      Generate local-ancestry-aware GWAS results
+plot.features           generate local-ancestry-aware phenotype
+                        distribution plots
+read.binary             Retrieve relevant local ancestry information at
+                        breakpoints
