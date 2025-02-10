@@ -1,0 +1,15 @@
+#' Example datasets
+#'
+#' Available datasets are:
+#' \dscribe{
+#'  \item{breakpoint_info}{A binary file that contains breakpoint information and corresponding local anceestry output from RFMix.}
+#'  \item{geno_global_PCs}{A text file that documents the top 10 PCs generated from plink2.}
+#'  \item{geno.gds}{A simulated .GDS formatted genotype file for demonstration.}
+#'  \item{global_ancestry}{A text file that documents the local-ancestry-aggregated lobal ancestry estimates.}
+#'  \item{LACs}{A binary file that documents Local Ancestry Coordinates derived from the file breakpoint_info.}
+#'  \item{pheno}{A simulated phenotype file for demonstration.}
+#' }
+#'
+#' @name example_datasets
+#' @docType data
+NULL
