@@ -72,7 +72,7 @@ get.LACs<-function(input.bp,psi,output.la,id.type=c('character','integer','numer
     if(j_extra>0)
       seek(con=con1,where=j_extra*n_unit_read_la*4,origin='current')
     la_coord<-readBin(con1,what=numeric(),n=n_unit_read_la,size=4)
-    la_coord<-matrix(la_coord,ncol=n_PC,byrow=T)
+    la_coord<-matrix(la_coord,ncol=n_ancestry,byrow=T)
     if(all(is.na(la_coord))){
       close(con1)
       close(con2)

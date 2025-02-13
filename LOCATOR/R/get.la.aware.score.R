@@ -12,20 +12,21 @@
 #' @param missing.method method of handling missing genotypes. Either "impute2mean" or "omit" (default = "impute2mean").
 #' @param is.dosage a logical switch for whether imputed dosage should be used from a GDS infile (default = FALSE).
 #' @param n.batch an integer for how many SNPs should be tested in a batch (default = 100). The computational time can increase dramatically if this value is either small or large. The optimal value for best performance depends on the user’s system.
-#' @return @format a dataframe with following components:
-#'  \describe{
-#'  \item{SNP}{SNP name, as supplied in snps.}
-#'  \item{CHR}{Chromosome, copied from .gds file.}
-#'  \item{POS}{physical position in base pairs, copied from .gds file.}
-#'  \item{REF}{reference allele, copied from .gds file.}
-#'  \item{ALT}{alternate allele, copied from .gds file.}
-#'  \item{MISSRATE}{number of individuals with non-missing genotypes for each SNP.}
-#'  \item{AF}{ALT allele frequency for each SNP.}
-#'  \item{N}{total sample size.}
-#'  \item{SCORE}{the summary score of the effect allele.}
-#'  \item{VAR}{the variance of the summary score.}
-#'  \item{PVAL}{local-ancestry-aware GWAS p-values.}
-#'  }
+#' @return a dataframe with following components:
+#' \tabular{ll}{
+#' \strong{Name} \tab \strong{Description} \cr
+#' SNP \tab SNP name, as supplied in snps. \cr
+#' CHR \tab Chromosome, copied from .gds file. \cr
+#' POS \tab physical position in base pair, copied from .gds file. \cr
+#' REF \tab reference allele, copied from .gds file. \cr
+#' ALT \tab alternate allele, copied from .gds file. \cr
+#' MISSRATE \tab number of individuals with non-missing genotypes for each SNP. \cr
+#' AF \tab ALT allele frequency for each SNP. \cr
+#' N \tab total sample size. \cr
+#' SCORE \tab the summary score of the effect allele. \cr
+#' VAR \tab the variance of the summary score. \cr
+#' PVAL \tab local-ancestry-aware GWAS p-values. \cr
+#' }
 #' @export
 #' @concept Calculating local-ancestry-aware GWAS
 
@@ -89,7 +90,7 @@ get.la.aware.score<-function(null.obj,geno.file,outfile,LAC.file,n_PC_used=NULL,
 	sample.id<-SeqArray::seqGetData(gds,'sample.id')
 	# read in pop.ids from the LAC file
 	con_la<-file(LAC.file,'rb')
-	n_PC<-readBin(con_la,what=numeric(),n=1,size=4)
+	n_PC<-readBin(con_la,what=integer(),n=1,size=4)
 	if(is.null(n_PC_used))
 	  n_PC_used<-n_PC
 	if(n_PC<n_PC_used)
@@ -108,8 +109,8 @@ get.la.aware.score<-function(null.obj,geno.file,outfile,LAC.file,n_PC_used=NULL,
 	n_pos_la<-readBin(con_la,what=integer(),n=1,size=4)
 	pos_la<-readBin(con_la,what=integer(),n=n_pos_la,size=4)
 	n_unit_read_la<-n_PC*n_indi_la
-	indi_common<-Reduce(intersect,list(sample.id,indi_la,null.obj$id_include))
-	indi_common<-sort(indi_common)  # Need to keep the common sample ids in the ascending order like LACs do, as the sample ids for genotypes are not subject to the change in orders.
+	indi_common<-Reduce(intersect,list(indi_la,sample.id,null.obj$id_include))
+#	indi_common<-sort(indi_common)  # Need to keep the common sample ids in the ascending order like LACs do, as the sample ids for genotypes are not subject to the change in orders.
 	if(length(indi_common)==0)
 		stop('Error: There is no common individual between the null model and the LAC file.')
 	indi_la_index<-match(indi_common,indi_la)
@@ -185,6 +186,14 @@ get.la.aware.score<-function(null.obj,geno.file,outfile,LAC.file,n_PC_used=NULL,
 					la_coord<-readBin(con_la,what=numeric(),n=n_unit_read_la,size=4)
 					la_coord<-matrix(la_coord,ncol=n_PC)[indi_la_index,]
 					colnames(la_coord)<-paste0('PC',seq_len(n_PC),'_la')
+					if(anyNA(la_coord) || all(la_coord==0)){
+					  if(length(L_list)==0)
+					    stop(paste0('Error: The initial LACs tested (',uniq_j_g[l],'th LACs) was supposed to be complete. Please check it out and fill in the missing values.'))
+					  is_na_indices<-is.na(la_coord)
+					  if(sum(is_na_indices)/length(is_na_indices)>0.1)
+					    stop(paste0('Error: The ',uniq_j_g[l],'th LACs have more than 10% missing values. Please check it out and fill it with non-missing values.'))
+					  la_coord[is_na_indices]<-L_list[[length(L_list)]][is_na_indices]
+					}
 					L_list[[l]]<-la_coord[,1:n_PC_used]
 				}
 				prev_j<-uniq_j_g[l]

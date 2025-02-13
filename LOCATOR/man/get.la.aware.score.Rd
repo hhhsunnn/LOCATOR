@@ -42,19 +42,20 @@ get.la.aware.score(
 \item{n.batch}{an integer for how many SNPs should be tested in a batch (default = 100). The computational time can increase dramatically if this value is either small or large. The optimal value for best performance depends on the user’s system.}
 }
 \value{
-@format a dataframe with following components:
-\describe{
-\item{SNP}{SNP name, as supplied in snps.}
-\item{CHR}{Chromosome, copied from .gds file.}
-\item{POS}{physical position in base pairs, copied from .gds file.}
-\item{REF}{reference allele, copied from .gds file.}
-\item{ALT}{alternate allele, copied from .gds file.}
-\item{MISSRATE}{number of individuals with non-missing genotypes for each SNP.}
-\item{AF}{ALT allele frequency for each SNP.}
-\item{N}{total sample size.}
-\item{SCORE}{the summary score of the effect allele.}
-\item{VAR}{the variance of the summary score.}
-\item{PVAL}{local-ancestry-aware GWAS p-values.}
+a dataframe with following components:
+\tabular{ll}{
+\strong{Name} \tab \strong{Description} \cr
+SNP \tab SNP name, as supplied in snps. \cr
+CHR \tab Chromosome, copied from .gds file. \cr
+POS \tab physical position in base pair, copied from .gds file. \cr
+REF \tab reference allele, copied from .gds file. \cr
+ALT \tab alternate allele, copied from .gds file. \cr
+MISSRATE \tab number of individuals with non-missing genotypes for each SNP. \cr
+AF \tab ALT allele frequency for each SNP. \cr
+N \tab total sample size. \cr
+SCORE \tab the summary score of the effect allele. \cr
+VAR \tab the variance of the summary score. \cr
+PVAL \tab local-ancestry-aware GWAS p-values. \cr
 }
 }
 \description{
