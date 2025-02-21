@@ -7,12 +7,12 @@ This tutorial covers:
   - Pipeline construction
   - Caveats
 
-For detailed technical specifications and methodology, please refer to LOCATOR package manual.pdf and *A Continuous Local Ancestry Measure for Efficient Local-Ancestry-Aware Association Tests. Hanxiao Sun. (2024)* [https://digitalcommons.library.tmc.edu/uthsph_dissertsopen/248/].
+For detailed technical specifications and methodology, please refer to LOCATOR package manual.pdf and *A Continuous Local Ancestry Measure for Efficient Local-Ancestry-Aware Association Tests. Hanxiao Sun. (2024)* https://digitalcommons.library.tmc.edu/uthsph_dissertsopen/248/.
 
-Getting Help
+Getting Help<br>
 If you have questions or encounter issues, please open a discussion thread in this repository. We actively monitor and respond to user inquiries.
 
-Citation
+Citation<br>
 If you use LOCATOR in your research, please cite: Sun, Hanxiao, "A Continuous Local Ancestry Measure for Efficient Local-Ancestry-Aware Association Tests" (2024). Dissertations & Theses (Open Access). 248. https://digitalcommons.library.tmc.edu/uthsph_dissertsopen/248.
 
 I would also like to credit this project to Dr. Han Chen, Shuyi Guo from University of Texas Health Science Center, Tomin Perea-Chamblee from Memorial Sloan Kettering Cancer Center and other authors in developing ideas, finalizing results and preparing the whole R package.
@@ -26,7 +26,7 @@ $$X_g = W_g\psi+\epsilon$$
 $$\hat{\psi} = (W_g^TW_g)^{-1}W_g^TX_g$$
 $$\hat{X_l} = W_l(W_g^TW_g)^{-1}W_g^TX_g$$
 
-LACs serve as efficient proxies for local ancestry estimates in GWAS adjustment. Due to memory constraints, these coordinates are stored in binary format. For the complete mathematical framework underlying this approach, please refer to . Detailed information about the data structure can be found in the section Step 2.5.
+LACs serve as efficient proxies for local ancestry estimates in GWAS adjustment. Due to memory constraints, these coordinates are stored in binary format. For the complete mathematical framework underlying this approach, please refer to *A Continuous Local Ancestry Measure for Efficient Local-Ancestry-Aware Association Tests. Hanxiao Sun. (2024)*. Detailed information about the data structure can be found in the section Step 2.5.
 
 ## Example data
 We simulated a group of 200 three-way admixed Hispanic individuals from African (AFR), European (EUR), and Amerindian (AMR) by Admix-Simu and selected a 20 Mbp region on chromosome 12 (chr12:48275834 - 68009712) containing 45,170 SNPs with minor allele frequency (MAF) ≥ 0.05 and 100 local ancestry tracks. Please note that this example dataset was simulated for demonstration purposes only, and the local ancestry was inferred using a combined continental reference panel, which may introduce some imprecision and does not fully capture the genetic complexity of real admixed populations.
@@ -41,11 +41,14 @@ The get.breakpoints() function simultaneously identifies local ancestry breakpoi
 
 We also provide internal local-ancestry-aggregated global ancestry estimates with genetic positions counted from telomeres (start.pos = 0). Please toggle on the argument if.yield.ga = TRUE. For analysis targeted at specific SNP chunks, please adjust start.pos accordingly. Alternatively, external global ancestry estimates (e.g., from ADMIXTURE) are also accepted for downstream analysis. Please ensure it is consistent with local ancestry inference in this case.
 
-### Step 1: Calculate the ancestry projection matrix \psi
+### Step 1: Calculate the ancestry projection matrix $`\psi`$
 The ancestry projection matrix $`\psi`$ is calculated using the get.anchor() function, which provides the exact positioning information for hypothetically unadmixed populations. Please only include the dimensions of global PCs that will be utilized in the downstream analysis as needed. Please ensure the order of global ancestry matches the local ancestry inference that will be analyzed in subsequent steps.
 
 ### Step 2: Calculate Local Ancestry Coordinates (LACs)
-Here we provide two types of LACs transformed from extracted local ancestry breakpoints: original LACs and orthogonalized LACs, the latter of which are derived by removing global PC effects from original LACs through orthogonal decomposition. Please choose the LAC type that best fits your analysis needs. Please generate original LACs via get.LACs() in advance as the required input for orthogonalized LACs via get.orthogonal.LACs(). When applying these functions, please specify the type of sample IDs, selected IDs, global PCs, positions as needed. Both LAC types are stored in the same binary format as breakpoints.
+Here we provide two types of LACs transformed from extracted local ancestry breakpoints: original LACs and orthogonalized LACs, the latter of which are derived by removing global PC effects from original LACs through orthogonal decomposition. We define the difference between orthogonalized LACs and global PCs as Local Deviation $`D_L`$, which represents pure additional population stratification effects derived from local ancestry. Please choose the LAC type that best fits your analysis needs. Please generate original LACs via get.LACs() in advance as the required input for orthogonalized LACs via get.orthogonal.LACs(). When applying these functions, please specify the type of sample IDs, selected IDs, global PCs, positions as needed. Both LAC types are stored in the same binary format as breakpoints. Let $`L`$ be the orthogonalized LACs, we have:
+
+$$L = \[I_n - X_g(X_g^TX_g)^{-1}X_g\]W_l\hat{\psi}$$
+$$D_L = X_g - L $$
 
 ### Step 2.5 (Optional): View binary files
 Please be aware that local ancestry breakpoints and LACs are stored in binary format and should not be opened or modified directly to prevent potential file corruption. Instead, please use the read.binary() function to view these binary files. If you encounter any file damage (e.g.: missing values), please examine your input data and regenerate the binary files.
