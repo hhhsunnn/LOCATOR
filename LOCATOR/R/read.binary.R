@@ -62,7 +62,7 @@ read.binary<-function(input.file,type=c('breakpoints','LACs'),id.type=c('charact
   prev_j<-0
   if(type=='breakpoints'){
     n_unit_read_la<-n_ancestry*n_indi*2
-    indi_index_2<-sort(c(c(indi_index*2-1),2*indi_index))
+    indi_index_2<-c(sapply(indi_index,function(x) return(c(2*x-1,2*x))))
     for(j in pos_index){
       j_extra<-j-prev_j-1
       if(j_extra>0)
@@ -73,8 +73,11 @@ read.binary<-function(input.file,type=c('breakpoints','LACs'),id.type=c('charact
       if(if.haplo){
         rownames(la_coord)<-c(t(outer(indi_id[indi_index],c('hap1','hap2'),paste,sep=':::')))
         la_coord<-tibble::rownames_to_column(la_coord,'haplotypes')
-      }else
-       la_coord<-la_coord %>% group_by(sampleIDs=rep(indi_id[indi_index],each=2)) %>% summarise(across(everything(),\(x) mean(x,na.rm=T))) %>% as.data.frame()
+      }else{
+        la_coord<-la_coord %>% group_by(indi=gl(n()/2,2)) %>% summarise(across(everything(),\(x) mean(x,na.rm=T))) %>% select(-indi)
+        rownames(la_coord)<-indi_id[indi_index]
+        la_coord<-tibble::rownames_to_column(la_coord,'sampleIDs')
+      }
       la_coord_list<-append(la_coord_list,list(la_coord))
       prev_j<-j
     }

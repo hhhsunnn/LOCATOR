@@ -236,8 +236,8 @@ get.la.aware.score<-function(null.obj,geno.file,outfile,LAC.file,n_PC_used=NULL,
 	}
 	close(con_la)
 	if(!inherits(geno.file,'SeqVarGDSClass'))
-		SeqArray::seqClose(geno.file)
-	else
 		SeqArray::seqClose(gds)
+	else
+		SeqArray::seqClose(geno.file)
 	return(invisible(NULL))
 }

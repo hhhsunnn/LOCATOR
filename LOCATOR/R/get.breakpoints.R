@@ -60,7 +60,7 @@ get.breakpoints<-function(input.la,input.pos,input.id,input.anc,input.sep,output
   }
   close(con2)
   writeBin(length(bp_spot),con=con1,size=4)
-  writeBin(as.integer(bp_spot),con=con1,size=4)
+  writeBin(as.integer(input.pos[bp_spot]),con=con1,size=4)
   close(con1)
   system(sprintf('cat %s %s > %s',file1,file2,output.bp))
   system(sprintf('rm %s %s',file1,file2))
